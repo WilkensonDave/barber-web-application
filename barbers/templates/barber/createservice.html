@@ -1,0 +1,22 @@
+{% extends "base/base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+  <section class="container mx-auto max-w-96 p-10">
+    <div class="flex flex-col">
+      <h2 class="text-3xl mb-5 font-semibold ">Create New Service</h2>
+      <form action="{% url 'create-service' %}" method="post" class="flex flex-col space-y-4">
+        {% csrf_token %}
+        {% for field in form %}
+        <label class="block text-xl font-medium text-gray-700">{{ field.label }}</label>
+        {% render_field field class="block h-auto p-2 w-full rounded-md border-gray-900 border-2  shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %}
+        {% for error in field.errors %}
+            <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+        {% endfor %}
+        
+        {% endfor %}
+        <button type="submit" class="bg-gray-950 p-2 text-yellow-500 text-2xl rounded-xl">Create</button>
+      </form>
+    </div>
+  </section>
+{% endblock %}

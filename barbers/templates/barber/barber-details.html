@@ -1,0 +1,32 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    <section>
+        <h1 class="text-center text-3xl font-semibold mt-5 font-sans">
+            Select the Service you want and continue to book the appointment.
+        </h1>
+        <div>
+            {% if barber.profile_image %}
+            <img src="{{ barber.profile_image.url }}" alt="" class="w-50 h-50 object-cover mb-5">
+            {% endif %}
+            <h2 class="mt-3">Barber Name: {{barber.full_name}}</h2>
+            {% for service in barber.services.all %}
+            <div class="mb-7">
+                <h4>Service Provided: {{service.name}}</h4>
+                <h4>Barber Location: {{barber.address}}</h4>
+                <p>Service Price: ${{service.price}}</p>
+                <p>Service Description: {{service.description}}</p>
+                {% if user.barber_profile.id != barber.id%}
+                <a href="{% url 'book-appointment' service.id %}">Book now</a>
+                {% else %}
+                <h3>You can not book Yourself.</h3>
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+        </div>
+        {% if barber.services.count == 0 %}
+                <h2>This Barber does not have any service available for now.</h2>
+        {% endif %}
+    </section>
+{% endblock %}

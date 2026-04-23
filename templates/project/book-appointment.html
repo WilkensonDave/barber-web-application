@@ -1,0 +1,58 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    <section>
+        <div>
+            <h1>Hi there, you are about to book an appointment with doctor</h1>
+            <div>
+                <h2>Booking: {{ service.name }}</h2>
+                <p>Barber: {{ service.owner.full_name }}</p>
+                <p>Price: ${{ service.price }}</p>
+                <p>Duration: {{ service.duration }} mins</p>
+            </div>
+        </div>
+        <div>
+            <form action="{% url 'book-appointment' service.id %}" method="POST">
+                {% csrf_token %}
+                
+                <h3>{{service.name}}</h3>
+                <label >Select Date:</label>
+                <input type="date" name="date" value="{{selected_date}}">
+                <button type="submit" name="action" value="get_slots" >
+                    Show Available Times
+                </button>
+                {% if slots %}
+                    <h4>Select Time</h4>
+                    {% for  slot in slots %}
+                        <input type="radio" name="time" value="{{ slot|time:'H:i' }}">
+                        {{slot|time:'g:i A'}}
+                    {% endfor %}
+                    {% else %}
+                    <p>No available slots for this date</p>
+                {% endif %}
+                <h4>Service Type</h4>
+                <label >
+                    <input type="radio" name="booking_type" value="shop">
+                    At Shop
+                </label>
+                <label>
+                    <input type="radio" name="booking_type" value="home">
+                    Home Service
+                </label>
+                <input type="text" name='address' placeholder="Enter address">
+                <h4>Payment</h4>
+
+                <label>
+                    <input type="radio" id="cash" name="payment_type" value="cash">
+                    Cash
+                </label>
+
+                <label>
+                    <input type="radio" id='online' name="payment_type" value="online">
+                    Online
+                </label>
+                <button type="submit">Book Appointment</button>
+            </form>
+        </div>
+    </section>
+{% endblock %}

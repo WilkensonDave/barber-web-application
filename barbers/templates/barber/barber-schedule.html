@@ -1,0 +1,16 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    <section>
+        <div class="ml-5">
+            {% for schedule in user.barber_profile.availabilities.all %}
+                <div>
+                    <p>{{schedule.get_day_of_week_display}}</p>
+                    <p>{{schedule.start_time}}</p>
+                    <p>{{schedule.end_time}}</p>
+                    <a href="{% url 'update-schedule' schedule.id %}">Update</a>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

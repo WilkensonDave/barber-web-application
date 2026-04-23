@@ -1,0 +1,87 @@
+{% load static tailwind_tags %}
+{% load i18n %}
+<!doctype html>
+<html lang="en">  
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css"
+    />
+    {% tailwind_css %}
+    <title>CutSlot</title>
+  </head>
+  <body>
+    <header class="bg-gray-900">
+      <nav
+        class="container gap-12 max-w-7px mx-auto sm:px-4 lg:px-8 flex justify-between p-5 text-white flex-col md:flex-row text-xl"
+      >
+        <div class="flex items-center flex-col md:flex-row no-underline space-x-5">
+          <a href="{% url 'home'%}" class="flex no-underline">
+            <span>✂</span>
+            <p class="text-xl">CutSlot</p>
+          </a>
+          
+        </div>
+        <div class="mb-3">
+          <u class="flex gap-6 flex-col md:flex-row items-center no-underline">
+            <li class="list-none">
+              <a href="{% url 'allbarbers'%}">{% trans 'Barbers' %}</a>
+            </li>
+            {% if user.user_type == "barber"%}
+            <li class="list-none">
+              <a href="{% url 'all-services' %}">{% trans 'My Services' %}</a>
+            </li>
+            {% else %}
+            <li class="list-none">
+              <a href="{% url 'all-barbers-services' %}">{% trans 'Services'%}</a>
+            </li>
+            {% endif %}
+            {% if not user.is_authenticated %}
+            <li class="list-none">
+              <a href="{% url 'customer_registration' %}">{% trans 'Register' %}</a>
+            </li>
+            <li class="list-none"><a href="{% url 'user_login'%}">{% trans 'Login'%}</a></li>
+            {% endif %}
+            {% if user.is_authenticated and user.user_type == "barber" %}
+            <li class="list-none">
+              <a href="{% url 'barber-dashboard' %}">{% trans 'Barber Dashboard' %}</a>
+            </li>
+            {% endif %} 
+            {% if user.is_authenticated and user.user_type == "customer" %}
+            <li class="list-none"><a href="{% url 'customer-dashboard' %}">{% trans 'Account' %}</a></li>
+            {% endif %}
+            
+            {% if not user.is_authenticated %}
+            <li
+              class="p-2 bg-yellow-500 rounded-xl text-gray-950 text-sm md:text-xl list-none"
+            >
+              <a href="{% url 'barber_registration'%}">{% trans 'Join as a barber' %}</a>
+            </li>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <form action="{% url 'logout' %}" method="post">
+              {% csrf_token %}
+              <button class="list-none bg-yellow-500 p-2 rounded-xl text-gray-950" type="submit">{% trans 'Logout'%}</button>
+            </form>
+            {% endif %}
+            <form action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <select name="language" class="bg-gray-900 text-white" onchange="this.form.submit()">
+              {% if not request.LANGUAGE_CODE %}
+              <option value="" disabled selected>Choose language</option>
+              {% endif %}
+              <option value="en" {% if request.LANGUAGE_CODE == "en" %}selected{% endif %}>English</option>
+              <option value="es" {% if request.LANGUAGE_CODE == "es" %}selected{% endif %}>Español</option>
+              <option value="fr" {% if request.LANGUAGE_CODE == "fr" %}selected{% endif %}>Français</option>
+            </select>
+          </form>
+          </u>
+        </div>
+      </nav>
+    </header>
+
+    {% block content %} {% endblock %}
+  </body>
+</html>

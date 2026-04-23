@@ -1,0 +1,35 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    <section>
+        <div class="grid grid-1 md:grid-cols-3 lg:grid-cols-4 md:space-x-5">
+            {% for barber in barbers %}
+            {% if barber.is_verified %}
+            <a
+                href="{% url 'barber-details' barber.id %}"
+                class="card p-3 rounded-3xl shadow-2xl flex flex-col text-left mx-w-[200px]"
+            >
+            {% if barber.profile_image %}
+            <img
+            src="{{barber.profile_image.url}}"
+            alt=""
+            class="w-50 h-50 mx-auto object-cover"
+            />{% endif %}
+            <div class="text-left">
+                <span class="font-bold">Name: </span>{{barber.full_name}}
+            </div>
+            <div class="text-left">
+                <span class="font-bold">Shop Name:</span> {{barber.shop_name}}
+            </div>
+            <div>{{barber.headline| slice:"50"}}...</div>
+
+            <div>
+            <span class="font-bold">Address: </span>
+                {{barber.address |slice:"15"}}...
+            </div>
+            {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

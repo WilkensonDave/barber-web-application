@@ -1,0 +1,20 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    <section>
+        <h2 class="text-3xl font-bold text-center mb-12">Your Appointment history</h2>
+        <div class="grid grid-cols-1 space-y-3 md:space-y-0 md:grid-cols-3 mb-5 w-1/2 max-w-6xl mx-auto gap-4 font-normal">
+            {% for appointment in user.barber_profile.barber_appointment.all %}
+                <a class="mb-5 p-5 bg-gray-900 text-white rounded-2xl shadow-xl" href="{% url 'barber-appointment-details' appointment.id%}">
+                    <p class="mb-2"><span class="font-bold text-xl">Service name: </span>{{appointment.service.name}}</p>
+                    <p class="mb-2"><span class="font-bold text-xl">Customer: </span>{{appointment.customer}}</p>
+                    <p class="mb-2"><span class="font-bold">Appointment status: </span>{{appointment.status | title }}</p>
+                    <p class="mb-2"><span class="font-bold">Serive Price: </span>{{appointment.service.price}}</p>
+                    <p class="mb-2"><span class="font-bold">Payment status: </span>{{appointment.payment_status | title}}</p>
+                    <p class="mb-2"><span class="font-bold">Appointment Date: </span>{{appointment.appointment_time}}</p>
+                </a>
+                
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

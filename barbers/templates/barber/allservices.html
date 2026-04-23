@@ -1,0 +1,15 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<section>
+    <div>
+        {% for service in user.barber_profile.services.all %}
+        <div class="text-center">
+            <p>{{service.name}}</p>
+            <p>{{service.price}}</p>
+            <p>{{service.duration}}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

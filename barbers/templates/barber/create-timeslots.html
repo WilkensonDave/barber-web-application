@@ -1,0 +1,14 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    <section>
+        <div>
+            <form action="{% url 'create-timeslots' %}" method="POST">
+                {% csrf_token %}
+                <h2>Choose the time you will be available for each selected date please.</h2>
+                {{form.as_p}}
+                <button class="" type="submit">Create</button>
+            </form>
+        </div>
+    </section>
+{% endblock %}

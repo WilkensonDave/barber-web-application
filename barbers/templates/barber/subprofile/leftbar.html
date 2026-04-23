@@ -1,0 +1,61 @@
+<div class="shadow-2xl rounded-2xl p-2 flex flex-col
+       xl:flex-row justify-center items-center text-2xl bg-gray-100 md:space-y-3 xl:space-y-0">
+        <ul class="flex flex-col space-y-7 w-full">
+          <div class="p-5 border-b-2 hover:bg-gray-800 hover:text-white">
+            {% if user.user_type == "barber" %}
+            <a href="{% url 'barber_profile'%}" class="flex space-x-5">
+              <i class="fi fi-rr-user text-xl hover:text-white"></i>
+              <span class="">Profile</span>
+            </a>
+            {% else %}
+                <a href="{% url 'customer_profile' %}" class="flex space-x-5">
+                    <i class="fi fi-rr-user text-xl hover:text-white"></i>
+                    <span class="">Profile</span>
+                </a>
+            {% endif %}
+          </div>
+          {% if user.user_type == "barber" %}
+          <div class="p-5 border-b-2 hover:bg-gray-800 hover:text-white">
+            <a href="{% url 'barber-schedule'%}" class="flex space-x-5">
+              <i class="fa fi-rr-calendar  hover:text-white"></i>
+              <span>Schedule</span>
+            </a>
+          </div>
+          {% endif %}
+          
+          <div class="p-5 border-b-2 hover:bg-gray-800 hover:text-white">
+            {% if user.user_type == "barber" %}
+            <a href="{% url 'all-notifications' %}" class="flex space-x-5">
+              <i class="fi fi-rr-bell hover:text-white"></i>
+              <span>Notifications</span>
+            </a>
+            {% else%}
+            <a href="{% url 'customer-all-notifications' %}" class="flex space-x-5">
+              <i class="fi fi-rr-bell hover:text-white"></i>
+              <span>Notifications</span>
+            </a>
+            {% endif %}
+          </div>
+          
+          <div class="p-5 hover:bg-gray-800 hover:text-white border-b-2">
+            {% if user.user_type == "barber" %}
+            <a href="{% url 'barber-appointments' %}" class="flex space-x-5">
+              <i class="fi fi-rr-list-check text-xl hover:text-white"></i>
+              <span>Appointments</span>
+            </a>
+            {% else %}
+            <a href="{% url 'customer-appointments' %}" class="flex space-x-5">
+              <i class="fi fi-rr-list-check text-xl hover:text-white"></i>
+              <span>Appointments</span>
+            </a>
+            {% endif %}
+          </div>
+          <div class="p-5 hover:bg-gray-800 hover:text-white ">
+            <form action="{% url 'logout' %}" method="post" class="flex space-x-5 items-center ">
+                {% csrf_token %}
+                <i class="fa-solid fa-right-from-bracket text-xl hover:text-white"></i>
+              <button type="submit" class="cursor-pointer text-center">Logout</button>
+            </form>
+          </div>
+        </ul>
+      </div>

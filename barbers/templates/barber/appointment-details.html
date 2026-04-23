@@ -1,0 +1,30 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<section>
+    <div>
+        <div>
+            <h2>
+                You have an appointment with: {{appointment.customer.full_name}}
+            </h2>
+            <h3>Service Requested: {{appointment.service.name}}</h3>
+            <p>Payment Method: {{appointment.payment_method}}</p>
+            <p>Payment status: {{appointment.payment_status}}</p>
+            <p>Appointment Date: {{appointment.appointment_time}}</p>
+            <p>Service Duration: {{appointment.service.duration}} minutes</p>
+            <p>Service Price: ${{appointment.service.price}}</p>
+            {% if appointment.booking_type == "home" %}
+                <p>Customer address: {{appointment.customer.address}}</p>
+            {% endif %}
+            <p>Booking status: {{appointment.status}}</p>
+            {% if appointment.status == "cancel" %}
+            <form action="{% url 'activate-appointment' appointment.id %}" method="POST">
+                {% csrf_token %}
+                <button class="cursor-pointer">Re-activate</button>
+            </form>
+                
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

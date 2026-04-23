@@ -1,0 +1,31 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<section>
+    <div>
+        <div>
+            <h2>
+                The service location; At {{appointment.booking_type}}
+            </h2>
+            <h3>Service Requested: {{appointment.service.name}}</h3>
+            <h2>Your requested barber: {{appointment.barber.full_name}}</h2>
+            <p>Barber address: {{appointment.barber.address}}</p>
+            <p>Payment Method: {{appointment.payment_method}}</p>
+            <p>Appointment Date: {{appointment.appointment_time}}</p>
+            <p>Service Duration: {{appointment.service.duration}} minutes</p>
+            <p>Service Price: ${{appointment.service.price}}</p>
+            {% if appointment.booking_type == "home" %}
+                <h2>You will pay an extra fee of: {{appointment.extra_fee}}</h2>
+                <p>The extra fee is for the transportation </p>
+            {% endif %}
+            <p>Booking status: {{appointment.status}}</p>
+            {% if appointment.status != "cancel" %}
+                <p>
+                    <a href="{% url 'customer-cancel-appointment' appointment.id %}">Cancel</a>/
+                    <a href="{% url 'reschedule_appointment' appointment.id %}">Reschedule</a>
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

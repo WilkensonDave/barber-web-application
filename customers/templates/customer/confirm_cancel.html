@@ -1,0 +1,14 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    <section>
+        <div>
+            <form method="post" action="{% url 'customer-cancel-appointment' appointment.id %}">
+                {% csrf_token %}
+                <p>Are you sure you want to cancel this appointment?</p>
+                <button type="submit">Yes, Cancel</button>
+            </form>
+            <a href="{% url 'customer-dashboard' %}">Go back</a>
+        </div>
+    </section>
+{% endblock %}

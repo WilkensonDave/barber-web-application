@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <h1>Hi {{user.customer_profile.full_name}}, Welcome to your profile.</h1>
+
+      <form action="{% url 'customer_profile' %}" method="POST" enctype="multipart/form-data">
+        <h2>Update Your profile</h2>
+        {% csrf_token %} 
+        {{form.as_p}}
+        <button type="submit" class="cursor-pointer">Save Profile</button>
+      </form>
+    </div>
+  </body>
+</html>
