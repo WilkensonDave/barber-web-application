@@ -1,20 +1,26 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <div>
-      <h1>Hi {{user.customer_profile.full_name}}, Welcome to your profile.</h1>
-
-      <form action="{% url 'customer_profile' %}" method="POST" enctype="multipart/form-data">
-        <h2>Update Your profile</h2>
-        {% csrf_token %} 
-        {{form.as_p}}
-        <button type="submit" class="cursor-pointer">Save Profile</button>
-      </form>
+{% extends "base/base.html" %}
+{% load widget_tweaks %}
+{% block content %}
+  <section>
+    <div class="container mx-auto">
+      <h1 class="text-center font-sans text-2xl mt-10 font-bold">Hi {{user.customer_profile.full_name}}, Welcome to your profile.</h1>
+      <div class="w-full max-w-200 mx-auto">
+        <form action="{% url 'customer_profile' %}" method="POST" enctype="multipart/form-data" class="p-5">
+          <h2 class="text-2xl mb-5 font-bold ">Update Your profile</h2>
+          {% csrf_token %}
+          {% for field in form %}
+          <label class="block text-xl font-medium text-gray-700">{{ field.label }}</label>
+          {% render_field field class="block h-auto p-2 w-full rounded-md border-gray-900 border-2 mb-5 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" %}
+          {% for error in field.errors %}
+              <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+          {% endfor %}
+          {% endfor %}
+           
+          <button type="submit" class="bg-gray-900 p-3 rounded-2xl text-white text-lg text-center mt-3">Save Profile</button>
+        </form>
+      </div>
+      
     </div>
-  </body>
-</html>
+  </section>
+
+{% endblock %}

@@ -44,7 +44,7 @@ class Appointment(models.Model):
         ("paid", "paid"),
     ]
     
-    BoOKING_TYPE = [
+    BOOKING_TYPE = [
         ("shop", "At Shop"),
         ("home", "Home Service")
     ]
@@ -57,13 +57,16 @@ class Appointment(models.Model):
     payment_method = models.CharField(max_length=100, choices=PAYMENT_METHOD, default="online")
     status = models.CharField(max_length=100, choices=STATUS, default="pending")
     created_at = models.DateTimeField(auto_now_add=True)
-    booking_type = models.CharField(max_length=10, choices=BoOKING_TYPE, default="shop")
+    booking_type = models.CharField(max_length=10, choices=BOOKING_TYPE, default="shop")
     extra_fee =  models.DecimalField(max_digits=6, decimal_places=2, default=0)
     address = models.CharField(max_length=255, blank=True, null=True)
     payment_status = models.CharField(max_length=255, choices=PAYMENT_STATUS, default="unpaid")
     
     def __str__(self):
         return f"{self.customer.full_name} with {self.barber.full_name} at - {self.appointment_time}"
+    
+    class Meta:
+        unique_together = ['barber', 'appointment_time']
 
     @property
     def is_valid(self):
@@ -80,13 +83,12 @@ class Billing(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     customer = models.ForeignKey(CustomerProfile, on_delete=models.SET_NULL, 
         null=True, blank=True, related_name="customer_billing")
-    stripe_payment_intent = models.CharField(max_length=200)
-    status = models.CharField(max_length=20, choices=STATUS)
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, 
-        blank=True, null=True, related_name="payments")
+        blank=True, null=True, related_name="appointment_payments")
     sub_total = models.DecimalField(max_digits=10, decimal_places=2)
     tax = models.DecimalField(max_digits=10, decimal_places=2)
     total = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=120, choices=[("Paid", "Paid"), ("Unpaid", "Unpaid"), ("cash", "cash")])
     billing_id = ShortUUIDField(length=6, max_length=10, alphabet="1234567890")
     created_at = models.DateTimeField(auto_now_add=True)
     

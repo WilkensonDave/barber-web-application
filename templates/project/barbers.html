@@ -2,7 +2,7 @@
 
 {% block content %}
     <section>
-        <div class="grid grid-1 md:grid-cols-3 lg:grid-cols-4 md:space-x-5">
+        <div class="grid grid-1 md:grid-cols-3 lg:grid-cols-3 md:space-x-5 mx-auto container mt-20">
             {% for barber in barbers %}
             {% if barber.is_verified %}
             <a
@@ -15,17 +15,19 @@
             alt=""
             class="w-50 h-50 mx-auto object-cover"
             />{% endif %}
-            <div class="text-left">
-                <span class="font-bold">Name: </span>{{barber.full_name}}
-            </div>
-            <div class="text-left">
+            <div class="self-center mt-5">
+                <div class="text-left">
+                    <span class="font-bold">Name: </span>{{barber.full_name}}
+                </div>
+                <div class="text-left">
                 <span class="font-bold">Shop Name:</span> {{barber.shop_name}}
-            </div>
-            <div>{{barber.headline| slice:"50"}}...</div>
+                </div>
+                <div>Headline: {{barber.headline| slice:"50"}}...</div>
 
-            <div>
-            <span class="font-bold">Address: </span>
-                {{barber.address |slice:"15"}}...
+                <div>
+                <span class="font-bold">Address: </span>
+                    {{barber.address |slice:"15"}}...
+                </div>
             </div>
             {% endif %}
             </a>

@@ -2,18 +2,23 @@
 
 {% block content %}
 <section>
-    <div>
-        <h1>All Available Services</h1>
-        {% for service in services %}
-            <a href="">
-                <p>{{service.name}}</p>
-                <p>{{service.price}}</p>
-                <p>{{service.duration}}</p>
-                <p>{{service.owner}}</p>
-                <p>{{service.description|slice:"50"}}...</p>
-                <a href="#">Select Service </a>
-            </a>.
-        {% endfor %}
+    <div class="mt-40 container mx-auto">
+        <h1 class="text-center text-5xl font-bold font-sans mb-20">All Available Services</h1>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {% for service in services %}
+                <div class="p-10 rounded-2xl shadow-2xl bg-gray-700 text-white
+                 font-sans text-xl place-self-center self-center">
+                    <p>{{service.name}}</p>
+                    <p>{{service.price}}</p>
+                    <p>{{service.duration}} minutes</p>
+                    <p>{{service.owner}}</p>
+                    <p>{{service.description|slice:"50"}}...</p>
+                    <a href="#" class="block mt-5 bg-amber-500 p-3 text-center 
+                    rounded-2xl hover:bg-amber-400 font-bold text-xl font-sans">Select Service </a>
+                </div>
+            {% endfor %}
+        </div>
+        
     </div>
 </section>
 {% endblock %}

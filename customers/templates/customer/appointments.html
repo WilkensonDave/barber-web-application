@@ -5,7 +5,7 @@
         <div>
             <h2 class="text-3xl font-bold text-center mb-12">Your Appointment history</h2>
             <div class="grid grid-cols-1 space-y-3 md:space-y-0 md:grid-cols-3 mb-5 w-1/2 max-w-6xl mx-auto gap-4 font-sans">
-                {% for appointment in appointments %}
+                {% for appointment in page_obj %}
                     <a class="mb-5 p-5 bg-gray-900 text-white rounded-2xl shadow-xl" href="{% url 'customer-appointment-details' appointment.id%}">
                         <p class="mb-3"><span class="font-bold text-xl">Service name: </span>{{appointment.service.name}}</p>
                         <p><span class="font-bold text-xl">Barber: </span>{{appointment.barber}}</p>
@@ -18,4 +18,25 @@
             </div>
         </div>
     </section>
+    {% if is_paginated %}
+        <div class="pagination  container mx-auto  bg-yellow-500 text-gray-700 w-100 p-5 text-center rounded-2xl text-lg">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{page_obj.previous_page_number}}">Previous</a>
+                {% endif %}
+                
+                {% if page_obj%}
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% endif %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number  }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
 {% endblock %}

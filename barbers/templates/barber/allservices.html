@@ -2,12 +2,12 @@
 
 {% block content %}
 <section>
-    <div>
+    <div class="grid grid-cols-1 md:grid-cols-2 container mx-auto w-full max-w-200 mt-10 gap-5 bg-gray-300 p-10 rounded-xl">
         {% for service in user.barber_profile.services.all %}
-        <div class="text-center">
-            <p>{{service.name}}</p>
-            <p>{{service.price}}</p>
-            <p>{{service.duration}}</p>
+        <div class="bg-gray-800 text-white p-3 rounded-lg text-lg font-sans">
+            <p>Service Name: {{service.name}}</p>
+            <p>Service Price: ${{service.price}}</p>
+            <p>Service Duration: {{service.duration}} minutes</p>
         </div>
         {% endfor %}
     </div>

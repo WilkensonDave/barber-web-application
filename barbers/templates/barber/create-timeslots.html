@@ -2,12 +2,12 @@
 
 {% block content %}
     <section>
-        <div>
+        <div class="container w-full max-w-200 mx-auto my-10 font-sans bg-gray-300 text-black p-5 rounded-xl">
             <form action="{% url 'create-timeslots' %}" method="POST">
                 {% csrf_token %}
-                <h2>Choose the time you will be available for each selected date please.</h2>
+                <h2 class="text-2xl mb-3">Choose the time you will be available for each selected date please.</h2>
                 {{form.as_p}}
-                <button class="" type="submit">Create</button>
+                <button  type="submit" class="text-xl bg-yellow-500 text-gray-700 p-3 mt-3 rounded-2xl">Create</button>
             </form>
         </div>
     </section>

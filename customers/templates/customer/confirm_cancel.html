@@ -2,13 +2,14 @@
 
 {% block content %}
     <section>
-        <div>
+        <div class="container mx-auto w-400 p-10 font-sans text-l">
             <form method="post" action="{% url 'customer-cancel-appointment' appointment.id %}">
                 {% csrf_token %}
-                <p>Are you sure you want to cancel this appointment?</p>
-                <button type="submit">Yes, Cancel</button>
+                <p class="font-sans font-bold text-2xl">Are you sure you want to cancel this appointment?</p>
+                <button type="submit" 
+                class="font-lg p-3 bg-amber-500 text-gray-700 rounded-2xl font-bold mt-5 mb-5">Yes, Cancel</button>
             </form>
-            <a href="{% url 'customer-dashboard' %}">Go back</a>
+            <a href="{% url 'customer-dashboard' %}" class="bg-gray-700 text-white p-3 rounded-xl">Go back</a>
         </div>
     </section>
 {% endblock %}

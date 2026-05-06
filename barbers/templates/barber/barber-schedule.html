@@ -2,13 +2,14 @@
 
 {% block content %}
     <section>
-        <div class="ml-5">
+        <div class="container mx-auto w-full max-w-200 mt-20 grid grid-cols-1 md:grid-cols-3 font-sans text-lg gap-3">
             {% for schedule in user.barber_profile.availabilities.all %}
-                <div>
+                <div class="p-3 bg-gray-600 text-white rounded-md">
                     <p>{{schedule.get_day_of_week_display}}</p>
                     <p>{{schedule.start_time}}</p>
                     <p>{{schedule.end_time}}</p>
-                    <a href="{% url 'update-schedule' schedule.id %}">Update</a>
+                    <a href="{% url 'update-schedule' schedule.id %}" 
+                    class="bg-amber-500 text-white p-2 rounded-2xl mt-3 block text-center text-xl">Update</a>
                 </div>
             {% endfor %}
         </div>

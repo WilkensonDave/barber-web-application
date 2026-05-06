@@ -14,6 +14,7 @@ from django.views.generic import ListView
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from projectapp.models import Appointment
+from django.core.paginator import Paginator
 
 # Create your views here.
 
@@ -53,7 +54,7 @@ class CustomerCancelAppointment(SuccessMessageMixin, View):
     def post(self, request, appointment_id):
         appointment = get_object_or_404(Appointment, id=appointment_id, customer=request.user.customer_profile)
         
-        appointment.status = "cancel"
+        appointment.status = "cancelled"
         appointment.save()
         
         return redirect("customer-dashboard")
@@ -92,10 +93,19 @@ class CustomerAppointmentDetails(DetailView):
 class CustomerAppointments(ListView):
     model = Appointment
     ordering = ["-created_at", "-id"]
+    paginate_by = 5
     template_name = "customer/appointments.html"
     context_object_name = "appointments"
     
     
     def get_object(self):
         return self.request.user.customer_profile
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        appointments = Appointment.objects.filter(customer=self.request.user.customer_profile)
+        paginator = Paginator(appointments, 6)
+        page_number = self.request.GET.get("page")
+        context["page_obj"] = paginator.get_page(page_number)
+        return context
 

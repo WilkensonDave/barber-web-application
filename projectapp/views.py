@@ -9,14 +9,20 @@ from django.urls import reverse_lazy
 from userauthentication.models import User
 from django.contrib.auth.views import LoginView, LogoutView
 from barbers.forms import BarberProfileForm
-from barbers.models import BarberProfile
-from customers.models import CustomerProfile
-from projectapp.models import Appointment, Service
+from barbers.models import BarberProfile, Notifications
+from customers.models import CustomerProfile, CustomerNotifications
+from projectapp.models import Appointment, Service, Billing
 from datetime import datetime, timedelta
 from .utils import generate_time_slots, combine_date_time, calculate_extra_fee, SearchBarbers, paginateBarbers
 from .forms import AppointmentForm, RescheduleForm
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
+from django.conf import settings
+import stripe
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.urls import reverse
+from django.utils.decorators import method_decorator
 # Create your views here.
 
 class HomePage(ListView):
@@ -32,15 +38,11 @@ class HomePage(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         my_query = context["barbers"]
-        custom_range, barbers = paginateBarbers(self.request, my_query, 1)
+        custom_range, barbers = paginateBarbers(self.request, my_query, 6)
         context["barbers"] = barbers
         context["custom_range"] = custom_range
         context["search_query"] = self.request.GET.get("search_query", "")
         return context
-
-class CheckoutView(TemplateView):
-    template_name = "project/checkout.html"
-
 
 class BookAppointmentView(View):
     def get(self, request, service_id):
@@ -85,15 +87,107 @@ class BookAppointmentView(View):
             appointment.save()
 
             if payment_method == "online":
-                return redirect("checkout", appointment.id)
-                
-            print(request.POST)
-            return redirect("home")
+                billing = Billing()
+                billing.customer = appointment.customer
+                billing.appointment = appointment
+                billing.sub_total = appointment.service.price
+                billing.tax = appointment.service.price*5/100
+                billing.total = billing.sub_total + billing.tax + appointment.extra_fee
+                billing.status = "Unpaid"
+                billing.save()
+            
+            if payment_method == "online":
+                return redirect("checkout", billing_id=billing.billing_id)
+            return redirect("customer-dashboard")
         
         else:
             messages.error(request, "Please enter correct data. The one provided was invalid.")
-            print("error")
-            return redirect("book-appointment", service.id) 
+            return redirect("book-appointment", service.id)
+
+class Checkout(TemplateView):
+    template_name = "project/checkout.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        billing_id = self.kwargs.get("billing_id")
+        billing = get_object_or_404(Billing, billing_id=billing_id)
+        context["billing"] = billing
+        context["billing_id"] = billing_id
+        context["stripe_public_key"] = settings.STRIPE_PUBLIC_KEY
+        return context
+
+#In understand this for to night.
+#Continue stripe tomorrow and test session creation
+
+@method_decorator(csrf_exempt, name="dispatch")
+class Stripe_payment(View):
+    def post(self, request, billing_id):
+        billing = get_object_or_404(Billing, billing_id=billing_id, customer=request.user.customer_profile)
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+
+        checkout_session = stripe.checkout.Session.create(
+            customer_email=billing.customer.user.email,
+            payment_method_types=['card'],    
+            line_items=[
+                { 
+                    'price_data':{
+                        'currency':"USD",
+                        'product_data':{
+                            'name':f"Appointment for {billing.customer.full_name}"
+                        },
+                        'unit_amount':int(billing.total * 100)
+                    },
+                    
+                    'quantity':1
+                }
+            ],
+            
+            mode="payment",
+            success_url=request.build_absolute_uri(reverse("stripe_payment_verify", args=[billing.billing_id])) + "?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url=request.build_absolute_uri(reverse("stripe_payment_verify", args=[billing.billing_id])) + "?session_id={CHECKOUT_SESSION_ID}"
+        )
+        return JsonResponse({"sessionId":checkout_session.id})
+
+class stripe_payment_verify(View):
+    def get(self, request, billing_id):
+        billing = Billing.objects.get(billing_id=billing_id)
+        session_id=request.GET.get("session_id")
+        session = stripe.checkout.Session.retrieve(session_id)
+        
+        if session.payment_status == "paid":
+            if billing.status == "Unpaid":
+                billing.status = "Paid"
+                billing.save()
+                billing.appointment.status = "confirmed"
+                billing.appointment.payment_status = "paid"
+                billing.appointment.save()
+                
+                Notifications.objects.create(
+                    barber=billing.appointment.barber,
+                    appointment=billing.appointment,
+                    type="new appointment"
+                )
+                
+                CustomerNotifications.objects.create(
+                    customer=billing.appointment.customer,
+                    appointment=billing.appointment,
+                    type="appointment scheduled"
+                )
+            return redirect(f"/payment_status/{billing.billing_id}/?payment_status=paid")
+        return redirect(f"/payment_status/{billing.billing_id}/?payment_status=failed")
+
+
+class PaymentStatus(TemplateView):
+    template_name = "project/payment-status.html"
+    
+    def get_context_data(self, **kwargs):
+        context  = super().get_context_data(**kwargs)
+        billing_id = self.kwargs.get("billing_id")
+        billing = get_object_or_404(Billing, billing_id=billing_id)
+        payment_status = self.request.GET.get("payment_status")
+        context["billing"] = billing
+        context["payment_status"] = payment_status
+        return context
 
 
 class ReScheduleAppointment(UpdateView):

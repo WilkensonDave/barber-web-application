@@ -2,27 +2,29 @@
 
 {% block content %}
 <section>
-    <div>
-        <div>
-            <h2>
-                The service location; At {{appointment.booking_type}}
+    <div class="mt-20">
+        <div class="w-150 p-10 bg-gray-700 mx-auto container rounded-2xl text-white text-lg">
+            <h2 class="text-xl mb-2">
+                <span class="font-bold text-yellow-500">The service location:</span> At {{appointment.booking_type}}
             </h2>
-            <h3>Service Requested: {{appointment.service.name}}</h3>
-            <h2>Your requested barber: {{appointment.barber.full_name}}</h2>
-            <p>Barber address: {{appointment.barber.address}}</p>
-            <p>Payment Method: {{appointment.payment_method}}</p>
-            <p>Appointment Date: {{appointment.appointment_time}}</p>
-            <p>Service Duration: {{appointment.service.duration}} minutes</p>
-            <p>Service Price: ${{appointment.service.price}}</p>
+            <h3 class="text-xl mb-2">Service Requested: {{appointment.service.name}}</h3>
+            <h2 class="text-xl mb-2">Your requested barber: {{appointment.barber.full_name}}</h2>
+            <p class="text-xl mb-2">Barber address: {{appointment.barber.address}}</p>
+            <p class="text-xl mb-2">Payment Method: {{appointment.payment_method}}</p>
+            <p class="text-xl mb-2">Appointment Date: {{appointment.appointment_time}}</p>
+            <p class="text-xl mb-2">Service Duration: {{appointment.service.duration}} minutes</p>
+            <p class="text-xl mb-2">Service Price: <span class="text-yellow-500">${{appointment.service.price}}</span></p>
             {% if appointment.booking_type == "home" %}
                 <h2>You will pay an extra fee of: {{appointment.extra_fee}}</h2>
                 <p>The extra fee is for the transportation </p>
             {% endif %}
-            <p>Booking status: {{appointment.status}}</p>
-            {% if appointment.status != "cancel" %}
-                <p>
-                    <a href="{% url 'customer-cancel-appointment' appointment.id %}">Cancel</a>/
-                    <a href="{% url 'reschedule_appointment' appointment.id %}">Reschedule</a>
+            <p class="text-xl">Booking status: {{appointment.status}}</p>
+            {% if appointment.status == "confirmed" or appointment.status == "pending" %}
+                <p class="mt-5 text-lg">
+                    <a href="{% url 'customer-cancel-appointment' appointment.id %}" 
+                    class="bg-red-500 p-2 text-lg rounded-2xl font-sans">Cancel</a>/
+                    <a href="{% url 'reschedule_appointment' appointment.id %}"
+                    class="bg-amber-500 p-2 rounded-xl font-sans text-lg">Reschedule</a>
                 </p>
             {% endif %}
         </div>

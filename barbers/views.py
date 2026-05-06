@@ -10,9 +10,11 @@ from userauthentication.models import User
 from django.contrib.auth.views import LoginView, LogoutView
 from barbers.forms import BarberProfileForm, ServiceForm, timeSlotsForm
 from barbers.models import BarberProfile, Notifications, Availability
-from projectapp.models import Service, Category, Appointment
+from projectapp.models import Service, Category, Appointment, Billing
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Sum
+from django.core.paginator import Paginator
 # Create your views here.
 
 
@@ -35,6 +37,17 @@ class BarberDashBoard(ListView):
     
     def get_object(self):
         return self.request.user.barber_profile
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        barber = self.request.user.barber_profile
+        total = Billing.objects.filter(appointment__service__owner=barber, status="Paid").aggregate(total_amount=Sum("total"))
+        total_booking = Appointment.objects.filter(barber=barber, payment_status="paid").count()
+        notifications = Notifications.objects.filter(barber=barber)
+        context["total_amount"] = total["total_amount"] or 0
+        context["total_booking"] = total_booking
+        context["notifications"] = notifications
+        return context
 
 class CreateServiceView(SuccessMessageMixin, CreateView):
     model = Service
@@ -113,11 +126,21 @@ class BarberDetails(DetailView):
 
 class BarberAppointments(ListView):
     model = Appointment
+    paginate_by = 6
+    ordering = ["-created_at"]
     template_name = "barber/appointments.html"
     context_object_name = "appointments"
+
     def get_object(self):
         return self.request.user.barber_profile
-
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        appointments = Appointment.objects.filter(barber=self.request.user.barber_profile)
+        paginator = Paginator(appointments, 5)
+        page_number = self.request.GET.get("page")
+        context["page_obj"] = paginator.get_page(page_number)
+        return context
 
 class CreateTimeSlots(CreateView):
     model = Availability

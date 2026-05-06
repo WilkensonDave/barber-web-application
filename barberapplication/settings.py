@@ -113,6 +113,7 @@ DATABASES = {
 }
 
 
+
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -161,3 +162,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "static/images")
 # LOGOUT_REDIRECT_URL = "user_login"
 # LOGIN_REDIRECT_URL = "dashboard"
 # LOGIN_URL = "login"
+
+
+STRIPE_SECRET_KEY=os.getenv("STRIPE_SECRET_KEY")
+STRIPE_PUBLIC_KEY=os.getenv("STRIPE_PUBLIC_KEY")

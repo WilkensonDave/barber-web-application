@@ -2,57 +2,67 @@
 
 {% block content %}
     <section>
-        <div>
-            <h1>Hi there, you are about to book an appointment with doctor</h1>
-            <div>
-                <h2>Booking: {{ service.name }}</h2>
-                <p>Barber: {{ service.owner.full_name }}</p>
-                <p>Price: ${{ service.price }}</p>
-                <p>Duration: {{ service.duration }} mins</p>
+        <div class="mx-auto container w-full max-w-200 mt-20"> 
+            <div class="font-sans  text-lg mb-10 bg-gray-700 text-white p-5 rounded-lg shadow-2xl">
+                <h1 class="text-yellow-500 text-2xl mb-3">Complete your booking  to get a nice haircut.</h1>
+                <div>
+                    <h2>Service you will get: {{ service.name }}</h2>
+                    <p>Barber: {{ service.owner.full_name }}</p>
+                    <p>Price: ${{ service.price }}</p>
+                    <p>Duration: {{ service.duration }} minutes</p>
+                </div>
             </div>
-        </div>
-        <div>
-            <form action="{% url 'book-appointment' service.id %}" method="POST">
-                {% csrf_token %}
-                
-                <h3>{{service.name}}</h3>
-                <label >Select Date:</label>
-                <input type="date" name="date" value="{{selected_date}}">
-                <button type="submit" name="action" value="get_slots" >
-                    Show Available Times
-                </button>
-                {% if slots %}
-                    <h4>Select Time</h4>
-                    {% for  slot in slots %}
-                        <input type="radio" name="time" value="{{ slot|time:'H:i' }}">
-                        {{slot|time:'g:i A'}}
-                    {% endfor %}
-                    {% else %}
-                    <p>No available slots for this date</p>
-                {% endif %}
-                <h4>Service Type</h4>
-                <label >
-                    <input type="radio" name="booking_type" value="shop">
-                    At Shop
-                </label>
-                <label>
-                    <input type="radio" name="booking_type" value="home">
-                    Home Service
-                </label>
-                <input type="text" name='address' placeholder="Enter address">
-                <h4>Payment</h4>
 
-                <label>
-                    <input type="radio" id="cash" name="payment_type" value="cash">
-                    Cash
-                </label>
+            <div class="text-lg">
+                <form action="{% url 'book-appointment' service.id %}" method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="text-lg mb-3">
+                        <label class="font-sans font-bold text-2xl">Select Date:</label>
+                        <input type="date" name="date" value="{{selected_date}}">
+                    </div>
+                    
 
-                <label>
-                    <input type="radio" id='online' name="payment_type" value="online">
-                    Online
-                </label>
-                <button type="submit">Book Appointment</button>
-            </form>
+                    <button type="submit" name="action" value="get_slots" 
+                    class="bg-gray-800 text-white p-2 rounded-lg mb-2">
+                        Show Available Times
+                    </button>
+
+                    {% if slots %}
+                        <h4 class="font-sans  font-bold text-2xl">Select Time</h4>
+                        {% for  slot in slots %}
+                            <input type="radio" name="time" value="{{ slot|time:'H:i' }}" class="bg-gray-200 text-black">
+                            {{slot|time:'g:i A'}}
+                        {% endfor %}
+                        {% else %}
+                        <p class="text-lg font-sans mb-2">No available slots for this date</p>
+                    {% endif %}
+                    <h4 class="font-sans text-2xl mt-5 font-bold">Service Type</h4>
+                    <label class="block">
+                        <input type="radio" name="booking_type" value="shop">
+                        At Shop
+                    </label>
+                    <label class="block">
+                        <input type="radio" name="booking_type" value="home">
+                        Home Service
+                    </label>
+                    <label class="font-sans text-lg block mt-3">If you Select home service, you should enter the address where you want the barber to come.</label>
+                    <input type="text" name='address' placeholder="Enter your address" 
+                    class="h-10 placeholder:font-bold border-2 border-gray-600 text-center mt-2 mb-2">
+                    <h4 class="text-lg font-bold mb-2">How would you like to pay?</h4>
+
+                    <label class="block">
+                        <input type="radio" id="cash" name="payment_type" value="cash">
+                        Cash
+                    </label>
+
+                    <label class="block">
+                        <input type="radio" id='online' name="payment_type" value="online">
+                        With Cards Online
+                    </label>
+                    <button type="submit" class="bg-gray-800 text-white p-2 rounded-lg mb-2 mt-3">Book Appointment</button>
+                </form>
+            </div>
         </div>
     </section>
 {% endblock %}

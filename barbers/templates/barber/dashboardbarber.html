@@ -65,7 +65,7 @@
           </div>
         </div>
         <!---->
-        <div class="mt-10 flex flex-col p-5 rounded-2xl shadow-xl">
+        <div class="mt-10 flex flex-col p-5 rounded-2xl shadow-xl max-h-120 overflow-y-auto mb-5"> 
 
           <div class="p-2 mb-5 border-b border-gray-300">
             <h2 class="font-bold text-2xl">Upcoming Appointments</h2>
@@ -77,7 +77,8 @@
 
           {% for  appointment in user.barber_profile.barber_appointment.all %}
           {% if appointment.is_valid  and appointment.status != "completed" %}
-          <div class="flex bg-gray-200 flex-col md:flex-row mb-5 p-2 justify-between items-center rounded-xl space-y-4 md:space-y-0">
+          <div class="flex bg-gray-200 flex-col md:flex-row mb-5 p-2 
+          justify-between items-center rounded-xl space-y-4 md:space-y-0">
             <div>
               <h2 class="font-bold">Booked By: {{appointment.customer.full_name}} </h2>
               <p>{{appointment.service}}, {{appointment.appointment_time}}</p>
@@ -104,14 +105,17 @@
         </div>
 
         <!---->
-        <div class="p-5 rounded-2xl shadow-2xl">
+        <div class="p-5 rounded-2xl shadow-2xl mb-10">
           <h2 class="font-bold text-2xl border-b border-gray-400 mb-3">Notifications</h2>
+          
           <div class=" flex flex-col">
+            {% for notification in notifications %}
             <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 p-3 justify-around border-b border-gray-400">
-              <p>Appointment Status:</p>
-              <p><span>customer name </span>has booked an apppointment</p>
-              <p>1 hour ago</p>
+              <p>Notification type: {{notification.type | title}}</p>
+              <p><span>{{notification.appointment.customer.full_name}} </span>has booked an apppointment</p>
+              On <p>{{notification.date}}</p>
             </div>
+            {% endfor %}
         </div>
       </div>
       </div>
@@ -121,7 +125,7 @@
           <h1 class="font-bold text-2xl mb-5">Dashboard Overview</h1>
           <div class="flex justify-between text-left text-lg border-b border-gray-400 p-3">
             <h3>Appointment served</h3>
-            <p>{{user.barber_profile.num_appointment_completed}}</p>
+            <p>{{total_booking}}</p>
           </div>
           <div class="flex justify-between text-left text-lg border-b border-gray-400 p-3">
             <h3>Number of services offer</h3>
@@ -129,11 +133,11 @@
           </div>
           <div class="flex justify-between space-x-3 text-left text-lg border-b border-gray-400 p-3">
             <h3>Total amount Earned</h3>
-            <p>$1200</p>
+            <p>${{total_amount}}</p>
           </div>
           <div class="flex justify-between space-x-3 text-left text-lg border-b border-gray-400 p-3">
             <h3>Total Appointments</h3>
-            <p>{{user.barber_profile.barber_appointment.count}}</p>
+            <p>{{total_booking}}</p>
           </div>
       </div>
     </div>
