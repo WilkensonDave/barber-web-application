@@ -6,14 +6,14 @@
 ![Alt text](images/cutomer-dashboard.PNG)
 
 ## Tech Stack Used for this Project
-# Python ✅
-# Django ✅
-# Tailwind CSS ✅
-# HTML ✅
-# Postgresql ✅
-# Stripe Payment Integration ✅
-# Language Translation
-# Booking system
+ Python ✅
+ Django ✅
+ Tailwind CSS ✅
+ HTML ✅
+ Postgresql ✅
+ Stripe Payment Integration ✅
+ Language Translation
+ Booking system
 
 
 ## Project OverView
@@ -28,27 +28,27 @@ Users can choose whether they want to visit the barber’s shop or request a hom
 To make it easier for users to find the right barber, the application includes a search system that allows users to search by barber name, zip code, city, country, service, and other relevant filters.
 
 ## Features 
- # Users and barbers registration and authentication
- # Role-based registration
- # User and barber Profile management
- # Barber can create service and add available time per each day
- # User can book appointment with the closes barber to them
- # Online payments with Stripe or Cash payment
- # Cancel appointment
- # Reschedule appointment
- # Dashboard for barbers and users
- # Barber can track  the amount of money they have earned and the number of appointments they have completed.
- # Language translation
+  Users and barbers registration and authentication
+  Role-based registration
+  User and barber Profile management
+  Barber can create service and add available time per each day
+  User can book appointment with the closes barber to them
+  Online payments with Stripe or Cash payment
+  Cancel appointment
+  Reschedule appointment
+  Dashboard for barbers and users
+  Barber can track  the amount of money they have earned and the number of appointments they have completed.
+  Language translation
 
 ## Access Restrictions
-# Barber can not book an appointment with themselves
-# Users must be logged in,  in order to book an appointment
-# Barber must be login to view the dashboard
-# Barber can not see other barbers dashboard
-# Barbers can not access user's dashboard
-# Users can not access barber's dashboard
-# Users can not have two(2) appointmens on the same day at the same time
-# Barber can not see other barbers services list
+ Barber can not book an appointment with themselves
+ Users must be logged in,  in order to book an appointment
+ Barber must be login to view the dashboard
+ Barber can not see other barbers dashboard
+ Barbers can not access user's dashboard
+ Users can not access barber's dashboard
+ Users can not have two(2) appointmens on the same day at the same time
+ Barber can not see other barbers services list
 
 ## Installation & Setup
 # git clone 
