@@ -51,14 +51,14 @@ To make it easier for users to find the right barber, the application includes a
  Barber can not see other barbers services list
 
 ## Installation & Setup
-# git clone 
-# cd barberapplication
+ git clone 
+ cd barberapplication
 
 ## Create virtual environment
-# python -m venv venv
+ python -m venv venv
 
 ## Activate environment
-# Windows
+ # Windows
   venv\Scripts\activate
 
 # Mac/Linux
@@ -68,7 +68,6 @@ To make it easier for users to find the right barber, the application includes a
  pip install -r requirements.txt
 
 ## Run migrations
-You need to 
  python manage.py migrate
 
 ## Start server
